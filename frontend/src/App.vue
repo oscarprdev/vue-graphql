@@ -1,32 +1,39 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import GraphQLExample from './components/GraphQLExample.vue'
+import { useQuery } from '@vue/apollo-composable'
+import { graphql } from './gql'
+import Todo from './components/todo.vue'
+import './style.css'
+import CreateTodoForm from './components/create-todo-form.vue'
+
+const { result, loading, error, refetch } = useQuery(
+  graphql(`
+    query GetTodos {
+      todos {
+        id
+        text
+        done
+      }
+    }
+  `)
+)
+
+const refreshScreen = () => {
+  refetch()
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="size-screen">
+    <CreateTodoForm @submit-completed="refreshScreen" />
+    <p v-if="loading">is loading...</p>
+    <p v-else-if="error">{{ error.message }}</p>
+    <ul v-else class="flex flex-col space-y-6 items-center">
+      <Todo
+        v-for="todo in result?.todos"
+        :key="todo.id"
+        :todo="todo"
+        @action-completed="refreshScreen"
+      />
+    </ul>
   </div>
-  <HelloWorld msg="Vite + Vue" />
-  <GraphQLExample />
 </template>
-
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
