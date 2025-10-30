@@ -4,10 +4,6 @@ import { gql } from '@apollo/client/core'
 import type { AddTodoMutation, AddTodoMutationVariables } from '../gql/graphql'
 import { reactive } from 'vue'
 
-const emit = defineEmits<{
-  (e: 'submit-completed'): void
-}>()
-
 const formState = reactive({ text: '' })
 
 const { mutate: addTodo, loading } = useMutation<AddTodoMutation, AddTodoMutationVariables>(gql`
@@ -27,8 +23,6 @@ const onSubmit = async (e: Event) => {
     await addTodo({ text: formState.text })
     formState.text = ''
   }
-
-  emit('submit-completed')
 }
 
 const onInputChange = (e: Event) => {

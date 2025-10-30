@@ -4,6 +4,7 @@ import { graphql } from './gql'
 import Todo from './components/todo.vue'
 import './style.css'
 import CreateTodoForm from './components/create-todo-form.vue'
+import SubscriptionNotifications from './components/subscription-notifications.vue'
 
 const { result, loading, error, refetch } = useQuery(
   graphql(`
@@ -24,7 +25,8 @@ const refreshScreen = () => {
 
 <template>
   <div class="size-screen">
-    <CreateTodoForm @submit-completed="refreshScreen" />
+    <SubscriptionNotifications @refresh="refreshScreen" />
+    <CreateTodoForm />
     <p v-if="loading">is loading...</p>
     <p v-else-if="error">{{ error.message }}</p>
     <ul v-else class="flex flex-col space-y-6 items-center">

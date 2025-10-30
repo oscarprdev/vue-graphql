@@ -15,12 +15,14 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  */
 type Documents = {
     "\n    query GetTodos {\n      todos {\n        id\n        text\n        done\n      }\n    }\n  ": typeof types.GetTodosDocument,
+    "\n    subscription OnTodoAdded {\n      todoAdded {\n        id\n        text\n        done\n      }\n    }\n  ": typeof types.OnTodoAddedDocument,
     "\n  mutation AddTodo($text: String!) {\n    addTodo(text: $text) {\n      id\n      text\n      done\n    }\n  }\n": typeof types.AddTodoDocument,
     "\n  mutation ToggleTodo($id: ID!) {\n    toggleTodo(id: $id) {\n      id\n    }\n  }\n": typeof types.ToggleTodoDocument,
     "\n  mutation RemoveTodo($id: ID!) {\n    removeTodo(id: $id)\n  }\n": typeof types.RemoveTodoDocument,
 };
 const documents: Documents = {
     "\n    query GetTodos {\n      todos {\n        id\n        text\n        done\n      }\n    }\n  ": types.GetTodosDocument,
+    "\n    subscription OnTodoAdded {\n      todoAdded {\n        id\n        text\n        done\n      }\n    }\n  ": types.OnTodoAddedDocument,
     "\n  mutation AddTodo($text: String!) {\n    addTodo(text: $text) {\n      id\n      text\n      done\n    }\n  }\n": types.AddTodoDocument,
     "\n  mutation ToggleTodo($id: ID!) {\n    toggleTodo(id: $id) {\n      id\n    }\n  }\n": types.ToggleTodoDocument,
     "\n  mutation RemoveTodo($id: ID!) {\n    removeTodo(id: $id)\n  }\n": types.RemoveTodoDocument,
@@ -44,6 +46,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query GetTodos {\n      todos {\n        id\n        text\n        done\n      }\n    }\n  "): (typeof documents)["\n    query GetTodos {\n      todos {\n        id\n        text\n        done\n      }\n    }\n  "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    subscription OnTodoAdded {\n      todoAdded {\n        id\n        text\n        done\n      }\n    }\n  "): (typeof documents)["\n    subscription OnTodoAdded {\n      todoAdded {\n        id\n        text\n        done\n      }\n    }\n  "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,7 +1,7 @@
 const { createYoga, createPubSub } = require('graphql-yoga');
 const { createServer } = require('http');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
-const { useServer } = require('graphql-ws/lib/use/ws');
+const { useServer } = require('graphql-ws/use/ws');
 const { WebSocketServer } = require('ws');
 const pubsub = createPubSub();
 
