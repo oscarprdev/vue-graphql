@@ -1,8 +1,9 @@
-const { createYoga } = require('graphql-yoga');
+const { createYoga, createPubSub } = require('graphql-yoga');
 const { createServer } = require('http');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
-const { PubSub } = require('graphql-subscriptions');
-const pubsub = new PubSub();
+const { useServer } = require('graphql-ws/lib/use/ws');
+const { WebSocketServer } = require('ws');
+const pubsub = createPubSub();
 
 let todos = [
   { id: '1', text: 'Learn Vue 3', done: false },
@@ -48,9 +49,15 @@ const resolvers = {
     },
   },
   Subscription: {
-    todoAdded: { subscribe: () => pubsub.asyncIterator('TODO_ADDED') },
-    todoUpdated: { subscribe: () => pubsub.asyncIterator('TODO_UPDATED') },
-    todoRemoved: { subscribe: () => pubsub.asyncIterator('TODO_REMOVED') },
+    todoAdded: {
+      subscribe: () => pubsub.subscribe('TODO_ADDED'),
+    },
+    todoUpdated: {
+      subscribe: () => pubsub.subscribe('TODO_UPDATED'),
+    },
+    todoRemoved: {
+      subscribe: () => pubsub.subscribe('TODO_REMOVED'),
+    },
   },
 };
 
@@ -71,6 +78,16 @@ const yoga = createYoga({
 const server = createServer(yoga);
 const port = 4000;
 
+// Create WebSocket server for subscriptions
+const wsServer = new WebSocketServer({
+  server,
+  path: '/graphql',
+});
+
+// Setup WebSocket server with graphql-ws
+useServer({ schema }, wsServer);
+
 server.listen(port, () => {
   console.log(`GraphQL server running at http://localhost:${port}/graphql`);
+  console.log(`WebSocket server running at ws://localhost:${port}/graphql`);
 });
